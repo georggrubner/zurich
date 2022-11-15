@@ -2,7 +2,6 @@ import * as React from 'react'
 import { useQuery } from '@tanstack/react-query'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
-import FormLabel from '@mui/material/FormLabel'
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Typography from '@mui/material/Typography'
@@ -77,9 +76,9 @@ const Survey = ({ ...props }) => {
     }
 
     return (
-        <Stack spacing={5} alignItems="center" justifyContent="center" sx={{ marginY: 10, marginX: 20 }}>
+        <Stack spacing={5} alignItems="center" justifyContent="center" sx={{ marginY: 10, marginX: 60 }}>
             {Object.keys(answers).length > 0 && nextId !== initialState.nextId && (
-                <Stack sx={{ width: '100%' }}>
+                <Stack spacing={1} sx={{ width: '100%' }}>
                     {Object.keys(answers).map((key) => {
                         const question = questions[key]
                         const answer = answers[Number(key)]

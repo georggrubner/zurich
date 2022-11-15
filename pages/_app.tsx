@@ -11,7 +11,7 @@ import '@fontsource/roboto/400.css'
 import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 
-export default ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppProps) => {
     const [queryClient] = React.useState(() => new QueryClient())
     const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)')
 
@@ -35,3 +35,5 @@ export default ({ Component, pageProps }: AppProps) => {
         </ThemeProvider>
     )
 }
+
+export default App

@@ -1,11 +1,12 @@
 import * as React from 'react'
-import { useQuery } from '@tanstack/react-query'
+import { useQuery, useMutation } from '@tanstack/react-query'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
+import Snackbar from '@mui/material/Snackbar'
 import { stringify } from './stringify'
 
 type Answer = {
@@ -56,9 +57,24 @@ type Question = {
 
 const Survey = ({ ...props }) => {
     const [{ nextId, answers }, dispatch] = React.useReducer(reducer, initialState)
+    const [successMessageOpen, setSuccessMessageOpen] = React.useState(false)
     const { isLoading, isError, data } = useQuery<Array<Question>>({
         queryKey: ['getChatData'],
         queryFn: () => fetch('https://raw.githubusercontent.com/mzronek/task/main/flow.json').then((res) => res.json()),
+    })
+    const {
+        status,
+        mutate,
+        data: asdf,
+    } = useMutation({
+        mutationFn: (data: State['answers']) =>
+            fetch('https://virtserver.swaggerhub.com/L8475/task/1.0.1/conversation', {
+                method: 'PUT',
+                body: JSON.stringify(data),
+            }),
+        onSuccess: () => {
+            setSuccessMessageOpen(true)
+        },
     })
 
     if (isError || !data) {
@@ -71,8 +87,12 @@ const Survey = ({ ...props }) => {
         return <div>Loading Questions...</div>
     }
 
-    if (!nextId) {
-        return <Alert>success</Alert>
+    if (!nextId && status === 'idle') {
+        mutate(answers)
+    }
+
+    const handleClose = () => {
+        setSuccessMessageOpen(false)
     }
 
     return (
@@ -100,7 +120,7 @@ const Survey = ({ ...props }) => {
                     })}
                 </Stack>
             )}
-            {questions[nextId] && (
+            {nextId ? (
                 <FormControl>
                     <Stack spacing={2}>
                         <Typography variant="h5">{questions[nextId].text}</Typography>
@@ -130,7 +150,14 @@ const Survey = ({ ...props }) => {
                         )}
                     </Stack>
                 </FormControl>
+            ) : (
+                <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
             )}
+            <Snackbar open={successMessageOpen} autoHideDuration={2000} onClose={handleClose}>
+                <Alert severity="success" sx={{ width: '100%' }}>
+                    Daten erfolgreich gespeichtert
+                </Alert>
+            </Snackbar>
         </Stack>
     )
 }

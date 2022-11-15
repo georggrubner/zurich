@@ -58,6 +58,7 @@ type Question = {
 const Survey = ({ ...props }) => {
     const [{ nextId, answers }, dispatch] = React.useReducer(reducer, initialState)
     const [successMessageOpen, setSuccessMessageOpen] = React.useState(false)
+    const [errorMessageOpen, setErrorMessageOpen] = React.useState(false)
     const { isLoading, isError, data } = useQuery<Array<Question>>({
         queryKey: ['getChatData'],
         queryFn: () => fetch('https://raw.githubusercontent.com/mzronek/task/main/flow.json').then((res) => res.json()),
@@ -75,6 +76,9 @@ const Survey = ({ ...props }) => {
         onSuccess: () => {
             setSuccessMessageOpen(true)
         },
+        onError: () => {
+            setErrorMessageOpen(true)
+        },
     })
 
     if (isError || !data) {
@@ -89,10 +93,6 @@ const Survey = ({ ...props }) => {
 
     if (!nextId && status === 'idle') {
         mutate(answers)
-    }
-
-    const handleClose = () => {
-        setSuccessMessageOpen(false)
     }
 
     return (
@@ -153,10 +153,11 @@ const Survey = ({ ...props }) => {
             ) : (
                 <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
             )}
-            <Snackbar open={successMessageOpen} autoHideDuration={2000} onClose={handleClose}>
-                <Alert severity="success" sx={{ width: '100%' }}>
-                    Daten erfolgreich gespeichtert
-                </Alert>
+            <Snackbar open={successMessageOpen} autoHideDuration={2000} onClose={() => setSuccessMessageOpen(false)}>
+                <Alert severity="success">Daten erfolgreich gespeichtert</Alert>
+            </Snackbar>
+            <Snackbar open={errorMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
+                <Alert severity="error">Error saving data to server</Alert>
             </Snackbar>
         </Stack>
     )

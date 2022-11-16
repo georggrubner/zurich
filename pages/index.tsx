@@ -3,6 +3,7 @@ import { useQuery, useMutation } from '@tanstack/react-query'
 import Stack from '@mui/material/Stack'
 import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
+import Box from '@mui/material/Box'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
@@ -66,9 +67,13 @@ const Survey = ({ ...props }) => {
     }
 
     return (
-        <Stack spacing={5} alignItems="center" justifyContent="center" sx={{ marginY: 10, marginX: 60 }}>
+        <Box
+            justifyContent="center"
+            sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 4 }}
+            margin={10}
+        >
             {Object.keys(answers).length > 0 && nextId !== initialState.nextId && (
-                <Stack spacing={1} sx={{ width: '100%' }}>
+                <Stack sx={{ gridColumn: '2 / 2' }} spacing={1}>
                     {Object.keys(answers).map((key) => {
                         const question = questions[key]
                         const answer = answers[Number(key)]
@@ -91,35 +96,37 @@ const Survey = ({ ...props }) => {
                 </Stack>
             )}
             {nextId ? (
-                <FormControl>
-                    <Stack spacing={2}>
-                        <Typography variant="h5">{questions[nextId].text}</Typography>
-                        {questions[nextId].uiType === 'button' ? (
-                            <ButtonGroup sx={{ justifyContent: 'center' }}>
-                                {questions[nextId].valueOptions.map((option) => (
-                                    <Button
-                                        key={String(option.value)}
-                                        onClick={() =>
-                                            dispatch({
-                                                type: 'answer',
-                                                id: questions[nextId].id,
-                                                answer: {
-                                                    name: questions[nextId].name,
-                                                    value: option.value,
-                                                },
-                                                nextId: option.nextId,
-                                            })
-                                        }
-                                    >
-                                        {option.text}
-                                    </Button>
-                                ))}
-                            </ButtonGroup>
-                        ) : (
-                            <Alert severity="warning">UI Type {questions[nextId].uiType} not implemented</Alert>
-                        )}
-                    </Stack>
-                </FormControl>
+                <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: '2 / 2' }}>
+                    <FormControl>
+                        <Stack spacing={2}>
+                            <Typography variant="h5">{questions[nextId].text}</Typography>
+                            {questions[nextId].uiType === 'button' ? (
+                                <ButtonGroup sx={{ justifyContent: 'center' }}>
+                                    {questions[nextId].valueOptions.map((option) => (
+                                        <Button
+                                            key={String(option.value)}
+                                            onClick={() =>
+                                                dispatch({
+                                                    type: 'answer',
+                                                    id: questions[nextId].id,
+                                                    answer: {
+                                                        name: questions[nextId].name,
+                                                        value: option.value,
+                                                    },
+                                                    nextId: option.nextId,
+                                                })
+                                            }
+                                        >
+                                            {option.text}
+                                        </Button>
+                                    ))}
+                                </ButtonGroup>
+                            ) : (
+                                <Alert severity="warning">UI Type {questions[nextId].uiType} not implemented</Alert>
+                            )}
+                        </Stack>
+                    </FormControl>
+                </Box>
             ) : (
                 <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
             )}
@@ -129,7 +136,7 @@ const Survey = ({ ...props }) => {
             <Snackbar open={errorMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
                 <Alert severity="error">Error saving data to server</Alert>
             </Snackbar>
-        </Stack>
+        </Box>
     )
 }
 

@@ -55,11 +55,11 @@ const Survey = ({ ...props }) => {
         return <Alert severity="error">Error Fetching Questions</Alert>
     }
 
-    const questions = Object.fromEntries(data.map((question) => [question.id, question]))
-
     if (isLoading) {
         return <div>Loading Questions...</div>
     }
+
+    const questions = Object.fromEntries(data.map((question) => [question.id, question]))
 
     return (
         <Box

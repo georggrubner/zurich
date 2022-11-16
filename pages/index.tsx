@@ -129,7 +129,7 @@ const Survey = ({ ...props }) => {
             </Box>
             <Snackbar
                 open={mutateStatus && ['success', 'error'].includes(mutateStatus)}
-                autoHideDuration={2000}
+                autoHideDuration={5000}
                 onClose={() => setMutateStatus(undefined)}
             >
                 <Alert severity={mutateStatus}>

@@ -8,7 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
-import { stringify } from './stringify'
+import useTheme from '@mui/material/styles/useTheme'
 import { reducer, initialState, State } from './state'
 
 type Question = {

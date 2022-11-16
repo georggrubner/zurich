@@ -56,7 +56,7 @@ const Survey = ({ ...props }) => {
     }
 
     if (isLoading) {
-        return <div>Loading Questions...</div>
+        return <Alert severity="info">Loading Questions...</Alert>
     }
 
     const questions = Object.fromEntries(data.map((question) => [question.id, question]))

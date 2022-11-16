@@ -8,7 +8,7 @@ import ButtonGroup from '@mui/material/ButtonGroup'
 import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
-import useTheme from '@mui/material/styles/useTheme'
+import Skeleton from '@mui/material/Skeleton'
 import { reducer, initialState, State } from './state'
 
 type Question = {
@@ -55,10 +55,6 @@ const Survey = ({ ...props }) => {
         return <Alert severity="error">Error Fetching Questions</Alert>
     }
 
-    if (isLoading) {
-        return <Alert severity="info">Loading Questions...</Alert>
-    }
-
     const questions = Object.fromEntries(data.map((question) => [question.id, question]))
 
     return (
@@ -67,75 +63,97 @@ const Survey = ({ ...props }) => {
             sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', rowGap: 8 }}
             margin={10}
         >
-            {Object.keys(answers).length > 0 && nextId !== initialState.nextId && (
+            {isLoading ? (
                 <Stack sx={{ gridColumn: 2 }} spacing={2}>
-                    {Object.keys(answers).map((key) => {
-                        const question = questions[key]
-                        const answer = question.valueOptions.find(({ value }) => value === answers[Number(key)].value)
-
-                        if (!question || !answer) {
-                            return (
-                                <Alert key={key} severity="error">
-                                    Error rendering question with id: {key}
-                                </Alert>
-                            )
-                        }
-
-                        return (
-                            <Stack key={key} direction={{ md: 'column', lg: 'row' }} justifyContent="space-between">
-                                <Typography variant="body1">{question.text}</Typography>
-                                <Typography variant="body1" textAlign="right">
-                                    {answer.text}
-                                </Typography>
-                            </Stack>
-                        )
-                    })}
+                    <Skeleton variant="rounded" height={40} />
+                    <Stack direction="row" justifyContent="center">
+                        <Skeleton variant="rounded" height={30} width={60} />
+                        <Skeleton variant="rounded" height={30} width={60} />
+                    </Stack>
                 </Stack>
-            )}
-            <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: 2 }} textAlign="center">
-                {nextId ? (
-                    <FormControl>
-                        <Stack spacing={2}>
-                            <Typography variant="h5">{questions[nextId].text}</Typography>
-                            {questions[nextId].uiType === 'button' ? (
-                                <ButtonGroup sx={{ justifyContent: 'center' }}>
-                                    {questions[nextId].valueOptions.map((option) => (
-                                        <Button
-                                            key={String(option.value)}
-                                            onClick={() =>
-                                                dispatch({
-                                                    type: 'answer',
-                                                    id: questions[nextId].id,
-                                                    answer: {
-                                                        name: questions[nextId].name,
-                                                        value: option.value,
-                                                    },
-                                                    nextId: option.nextId,
-                                                })
-                                            }
-                                        >
-                                            {option.text}
-                                        </Button>
-                                    ))}
-                                </ButtonGroup>
-                            ) : (
-                                <Alert severity="warning">UI Type {questions[nextId].uiType} not implemented</Alert>
-                            )}
+            ) : (
+                <>
+                    {Object.keys(answers).length > 0 && nextId !== initialState.nextId && (
+                        <Stack sx={{ gridColumn: 2 }} spacing={2}>
+                            {Object.keys(answers).map((key) => {
+                                const question = questions[key]
+                                const answer = question.valueOptions.find(
+                                    ({ value }) => value === answers[Number(key)].value,
+                                )
+
+                                if (!question || !answer) {
+                                    return (
+                                        <Alert key={key} severity="error">
+                                            Error rendering question with id: {key}
+                                        </Alert>
+                                    )
+                                }
+
+                                return (
+                                    <Stack
+                                        key={key}
+                                        direction={{ md: 'column', lg: 'row' }}
+                                        justifyContent="space-between"
+                                    >
+                                        <Typography variant="body1">{question.text}</Typography>
+                                        <Typography variant="body1" textAlign="right">
+                                            {answer.text}
+                                        </Typography>
+                                    </Stack>
+                                )
+                            })}
                         </Stack>
-                    </FormControl>
-                ) : (
-                    <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
-                )}
-            </Box>
-            <Snackbar
-                open={mutateStatus && ['success', 'error'].includes(mutateStatus)}
-                autoHideDuration={5000}
-                onClose={() => setMutateStatus(undefined)}
-            >
-                <Alert severity={mutateStatus}>
-                    {mutateStatus === 'success' ? 'Daten erfolgreich gespeichtert' : 'Fehler beim Speichern der Daten'}
-                </Alert>
-            </Snackbar>
+                    )}
+                    <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: 2 }} textAlign="center">
+                        {nextId ? (
+                            <FormControl>
+                                <Stack spacing={2}>
+                                    <Typography variant="h5">{questions[nextId].text}</Typography>
+                                    {questions[nextId].uiType === 'button' ? (
+                                        <ButtonGroup sx={{ justifyContent: 'center' }}>
+                                            {questions[nextId].valueOptions.map((option) => (
+                                                <Button
+                                                    key={String(option.value)}
+                                                    onClick={() =>
+                                                        dispatch({
+                                                            type: 'answer',
+                                                            id: questions[nextId].id,
+                                                            answer: {
+                                                                name: questions[nextId].name,
+                                                                value: option.value,
+                                                            },
+                                                            nextId: option.nextId,
+                                                        })
+                                                    }
+                                                >
+                                                    {option.text}
+                                                </Button>
+                                            ))}
+                                        </ButtonGroup>
+                                    ) : (
+                                        <Alert severity="warning">
+                                            UI Type {questions[nextId].uiType} not implemented
+                                        </Alert>
+                                    )}
+                                </Stack>
+                            </FormControl>
+                        ) : (
+                            <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
+                        )}
+                    </Box>
+                    <Snackbar
+                        open={mutateStatus && ['success', 'error'].includes(mutateStatus)}
+                        autoHideDuration={5000}
+                        onClose={() => setMutateStatus(undefined)}
+                    >
+                        <Alert severity={mutateStatus}>
+                            {mutateStatus === 'success'
+                                ? 'Daten erfolgreich gespeichtert'
+                                : 'Fehler beim Speichern der Daten'}
+                        </Alert>
+                    </Snackbar>
+                </>
+            )}
         </Box>
     )
 }

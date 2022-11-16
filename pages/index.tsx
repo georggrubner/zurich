@@ -126,7 +126,9 @@ const Survey = ({ ...props }) => {
                         </Stack>
                     </FormControl>
                 ) : (
-                    <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
+                    <Typography textAlign="center" variant="h3">
+                        Herzlichen Dank für Ihre Angaben
+                    </Typography>
                 )}
             </Box>
             <Snackbar

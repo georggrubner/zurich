@@ -81,6 +81,12 @@ const Survey = ({ ...props }) => {
         },
     })
 
+    React.useEffect(() => {
+        if (!nextId) {
+            mutate(answers)
+        }
+    }, [nextId, answers, mutate])
+
     if (isError || !data) {
         return <Alert severity="error">Error Fetching Questions</Alert>
     }
@@ -89,10 +95,6 @@ const Survey = ({ ...props }) => {
 
     if (isLoading) {
         return <div>Loading Questions...</div>
-    }
-
-    if (!nextId && status === 'idle') {
-        mutate(answers)
     }
 
     return (

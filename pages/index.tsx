@@ -31,11 +31,7 @@ const Survey = ({ ...props }) => {
         queryKey: ['getChatData'],
         queryFn: () => fetch('https://raw.githubusercontent.com/mzronek/task/main/flow.json').then((res) => res.json()),
     })
-    const {
-        status,
-        mutate,
-        data: asdf,
-    } = useMutation({
+    const { status, mutate } = useMutation({
         mutationFn: (data: State['answers']) =>
             fetch('https://virtserver.swaggerhub.com/L8475/task/1.0.1/conversation', {
                 method: 'PUT',

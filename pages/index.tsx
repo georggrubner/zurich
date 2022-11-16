@@ -68,7 +68,7 @@ const Survey = ({ ...props }) => {
             margin={10}
         >
             {Object.keys(answers).length > 0 && nextId !== initialState.nextId && (
-                <Stack sx={{ gridColumn: '2 / 2' }} spacing={1}>
+                <Stack sx={{ gridColumn: 2 }} spacing={1}>
                     {Object.keys(answers).map((key) => {
                         const question = questions[key]
                         const answer = question.valueOptions.find(({ value }) => value === answers[Number(key)].value)
@@ -90,7 +90,7 @@ const Survey = ({ ...props }) => {
                     })}
                 </Stack>
             )}
-            <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: '2 / 2' }} textAlign="center">
+            <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: 2 }} textAlign="center">
                 {nextId ? (
                     <FormControl>
                         <Stack spacing={2}>

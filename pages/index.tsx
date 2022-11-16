@@ -94,8 +94,8 @@ const Survey = ({ ...props }) => {
                     })}
                 </Stack>
             )}
-            {nextId ? (
-                <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: '2 / 2' }}>
+            <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: '2 / 2' }}>
+                {nextId ? (
                     <FormControl>
                         <Stack spacing={2}>
                             <Typography variant="h5">{questions[nextId].text}</Typography>
@@ -125,10 +125,10 @@ const Survey = ({ ...props }) => {
                             )}
                         </Stack>
                     </FormControl>
-                </Box>
-            ) : (
-                <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
-            )}
+                ) : (
+                    <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
+                )}
+            </Box>
             <Snackbar
                 open={mutateStatus && ['success', 'error'].includes(mutateStatus)}
                 autoHideDuration={2000}

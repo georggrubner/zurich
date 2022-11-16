@@ -64,7 +64,7 @@ const Survey = ({ ...props }) => {
     return (
         <Box
             justifyContent="center"
-            sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 8 }}
+            sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', rowGap: 8 }}
             margin={10}
         >
             {Object.keys(answers).length > 0 && nextId !== initialState.nextId && (

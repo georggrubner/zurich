@@ -26,8 +26,7 @@ type Question = {
 
 const Survey = ({ ...props }) => {
     const [{ nextId, answers }, dispatch] = React.useReducer(reducer, initialState)
-    const [successMessageOpen, setSuccessMessageOpen] = React.useState(false)
-    const [errorMessageOpen, setErrorMessageOpen] = React.useState(false)
+    const [mutateStatus, setMutateStatus] = React.useState<'success' | 'error' | undefined>()
     const { isLoading, isError, data } = useQuery<Array<Question>>({
         queryKey: ['getChatData'],
         queryFn: () => fetch('https://raw.githubusercontent.com/mzronek/task/main/flow.json').then((res) => res.json()),
@@ -43,10 +42,10 @@ const Survey = ({ ...props }) => {
                 body: JSON.stringify(data),
             }),
         onSuccess: () => {
-            setSuccessMessageOpen(true)
+            setMutateStatus('success')
         },
         onError: () => {
-            setErrorMessageOpen(true)
+            setMutateStatus('error')
         },
     })
 
@@ -130,11 +129,14 @@ const Survey = ({ ...props }) => {
             ) : (
                 <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
             )}
-            <Snackbar open={successMessageOpen} autoHideDuration={2000} onClose={() => setSuccessMessageOpen(false)}>
-                <Alert severity="success">Daten erfolgreich gespeichtert</Alert>
-            </Snackbar>
-            <Snackbar open={errorMessageOpen} autoHideDuration={2000} onClose={() => setErrorMessageOpen(false)}>
-                <Alert severity="error">Error saving data to server</Alert>
+            <Snackbar
+                open={mutateStatus && ['success', 'error'].includes(mutateStatus)}
+                autoHideDuration={2000}
+                onClose={() => setMutateStatus(undefined)}
+            >
+                <Alert severity={mutateStatus}>
+                    {mutateStatus === 'success' ? 'Daten erfolgreich gespeichtert' : 'Fehler beim Speichern der Daten'}
+                </Alert>
             </Snackbar>
         </Box>
     )

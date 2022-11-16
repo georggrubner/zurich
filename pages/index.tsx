@@ -71,7 +71,7 @@ const Survey = ({ ...props }) => {
                 <Stack sx={{ gridColumn: '2 / 2' }} spacing={1}>
                     {Object.keys(answers).map((key) => {
                         const question = questions[key]
-                        const answer = answers[Number(key)]
+                        const answer = question.valueOptions.find(({ value }) => value === answers[Number(key)].value)
 
                         if (!question || !answer) {
                             return (
@@ -84,7 +84,7 @@ const Survey = ({ ...props }) => {
                         return (
                             <Stack key={key} direction="row" justifyContent="space-between">
                                 <Typography variant="body1">{question.text}</Typography>
-                                <Typography variant="body1">{stringify(answer.value)}</Typography>
+                                <Typography variant="body1">{answer.text}</Typography>
                             </Stack>
                         )
                     })}

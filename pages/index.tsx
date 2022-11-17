@@ -1,7 +1,6 @@
 import * as React from 'react'
 import { useQuery, useMutation } from '@tanstack/react-query'
 import Stack from '@mui/material/Stack'
-import FormControl from '@mui/material/FormControl'
 import Button from '@mui/material/Button'
 import Box from '@mui/material/Box'
 import ButtonGroup from '@mui/material/ButtonGroup'
@@ -106,7 +105,6 @@ const Survey = ({ ...props }) => {
                     )}
                     <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: 2 }} textAlign="center">
                         {nextId ? (
-                            <FormControl>
                                 <Stack spacing={2}>
                                     <Typography variant="h5">{questions[nextId].text}</Typography>
                                     {questions[nextId].uiType === 'button' ? (
@@ -131,12 +129,9 @@ const Survey = ({ ...props }) => {
                                             ))}
                                         </ButtonGroup>
                                     ) : (
-                                        <Alert severity="warning">
-                                            UI Type {questions[nextId].uiType} not implemented
-                                        </Alert>
+                                    <Alert severity="warning">UI Type {questions[nextId].uiType} not implemented</Alert>
                                     )}
                                 </Stack>
-                            </FormControl>
                         ) : (
                             <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
                         )}

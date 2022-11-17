@@ -8,7 +8,7 @@ import Typography from '@mui/material/Typography'
 import Alert from '@mui/material/Alert'
 import Snackbar from '@mui/material/Snackbar'
 import Skeleton from '@mui/material/Skeleton'
-import { reducer, initialState, State } from './state'
+import { reducer, initialState, State } from '../store/state'
 
 type Question = {
     id: number

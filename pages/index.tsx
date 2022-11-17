@@ -50,11 +50,11 @@ const Survey = ({ ...props }) => {
         }
     }, [nextId, answers, mutate])
 
-    if (isError || !data) {
+    if (isError) {
         return <Alert severity="error">Error Fetching Questions</Alert>
     }
 
-    const questions = Object.fromEntries(data.map((question) => [question.id, question]))
+    const questions = data ? Object.fromEntries(data.map((question) => [question.id, question])) : undefined
 
     return (
         <Box
@@ -62,7 +62,7 @@ const Survey = ({ ...props }) => {
             sx={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', rowGap: 8 }}
             margin={10}
         >
-            {isLoading ? (
+            {isLoading || !questions ? (
                 <Stack sx={{ gridColumn: 2 }} spacing={2}>
                     <Skeleton variant="rounded" height={40} />
                     <Stack direction="row" justifyContent="center">
@@ -105,33 +105,33 @@ const Survey = ({ ...props }) => {
                     )}
                     <Box sx={{ display: 'flex', justifyContent: 'center', gridColumn: 2 }} textAlign="center">
                         {nextId ? (
-                                <Stack spacing={2}>
-                                    <Typography variant="h5">{questions[nextId].text}</Typography>
-                                    {questions[nextId].uiType === 'button' ? (
-                                        <ButtonGroup sx={{ justifyContent: 'center' }}>
-                                            {questions[nextId].valueOptions.map((option) => (
-                                                <Button
-                                                    key={String(option.value)}
-                                                    onClick={() =>
-                                                        dispatch({
-                                                            type: 'answer',
-                                                            id: questions[nextId].id,
-                                                            answer: {
-                                                                name: questions[nextId].name,
-                                                                value: option.value,
-                                                            },
-                                                            nextId: option.nextId,
-                                                        })
-                                                    }
-                                                >
-                                                    {option.text}
-                                                </Button>
-                                            ))}
-                                        </ButtonGroup>
-                                    ) : (
+                            <Stack spacing={2}>
+                                <Typography variant="h5">{questions[nextId].text}</Typography>
+                                {questions[nextId].uiType === 'button' ? (
+                                    <ButtonGroup sx={{ justifyContent: 'center' }}>
+                                        {questions[nextId].valueOptions.map((option) => (
+                                            <Button
+                                                key={String(option.value)}
+                                                onClick={() =>
+                                                    dispatch({
+                                                        type: 'answer',
+                                                        id: questions[nextId].id,
+                                                        answer: {
+                                                            name: questions[nextId].name,
+                                                            value: option.value,
+                                                        },
+                                                        nextId: option.nextId,
+                                                    })
+                                                }
+                                            >
+                                                {option.text}
+                                            </Button>
+                                        ))}
+                                    </ButtonGroup>
+                                ) : (
                                     <Alert severity="warning">UI Type {questions[nextId].uiType} not implemented</Alert>
-                                    )}
-                                </Stack>
+                                )}
+                            </Stack>
                         ) : (
                             <Typography variant="h3">Herzlichen Dank für Ihre Angaben</Typography>
                         )}
